@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="testng-6.9.10">
+  <library name="xxl-master">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../xxl-master/testng-6.9.10.jar!/" />
+      <root url="jar://$PROJECT_DIR$/out/artifacts/xxl_master_jar/xxl-master.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

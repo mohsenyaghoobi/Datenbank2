@@ -1,15 +1,26 @@
+import java.io.Serializable;
 
-public class StockEntry {
+/**
+ * Created by Mohsen on 28-Oct-16.
+ */
+
+                                            //to serialize the File
+public class StockEntry  implements Serializable{
     private int id;
-    private double kurswert;
-    private String name, zeitstempel;
+    private int namelenght;
+    private String name;
+    private String zeitStempel;
+    private double kursWert;
+    public StockEntry()
+    {
 
-    public StockEntry(int id, String name, String zeitstempel, double kurswert) {
-        this.id = id;
-
-        this.name = name;
-        this.zeitstempel = zeitstempel;
-        this.kurswert = kurswert;
+    }
+    public StockEntry(int id , String name ,String zeitStempel,double kursWert)
+    {
+        this.id=id;
+        this.name =name;
+        this.zeitStempel =zeitStempel;
+        this.kursWert =kursWert;
     }
 
     public int getId() {
@@ -20,14 +31,6 @@ public class StockEntry {
         this.id = id;
     }
 
-    public double getKurswert() {
-        return kurswert;
-    }
-
-    public void setKurswert(double kurswert) {
-        this.kurswert = kurswert;
-    }
-
     public String getName() {
         return name;
     }
@@ -36,16 +39,24 @@ public class StockEntry {
         this.name = name;
     }
 
-    public String getZeitstempel() {
-        return zeitstempel;
+    public String getZeitStempel() {
+        return zeitStempel;
     }
 
-    public void setZeitstempel(String zeitstempel) {
-        this.zeitstempel = zeitstempel;
+    public void setZeitStempel(String zeitStempel) {
+        this.zeitStempel = zeitStempel;
     }
 
-    @Override
-    public String toString(){
-        return id + " " + name + " " + zeitstempel + " " + kurswert;
+    public double getKursWert() {
+        return kursWert;
+    }
+
+    public void setKursWert(double kursWert) {
+        this.kursWert = kursWert;
+    }
+
+    public void Print()
+    {
+        System.out.println( id +"_"+ name+ "_"+ zeitStempel + "_" + kursWert);
     }
 }

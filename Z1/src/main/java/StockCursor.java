@@ -1,73 +1,63 @@
 import xxl.core.cursors.AbstractCursor;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-
-
+/**
+ * Created by Mohsen on 28-Oct-16.
+ */
 public class StockCursor extends AbstractCursor<StockEntry> {
 
-    FileInputStream fis = null;
+    FileInputStream fis;
+    String filename = "";
 
-    public StockCursor(String file_name) {
-        File file = new File(file_name);
-        try {
-            fis = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            log("Error by reading file " + file_name);
-        }
+    public StockCursor(String filename) throws FileNotFoundException {
+        this.filename = filename;
+        fis = new FileInputStream(this.filename);
     }
 
+    @Override
     protected boolean hasNextObject() {
+        boolean result = false;
         try {
             if (fis.available() > 0)
-                return true;
-        } catch (IOException e) {
-            e.printStackTrace();
+                result = true;
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-        return false;
+        return result;
+
+
     }
 
+    @Override
     protected StockEntry nextObject() {
+        StockEntry entry=null;
         try {
-            byte[] bytes_array = new byte[4];
-            fis.read(bytes_array);
-            int id = ByteBuffer.wrap(bytes_array).getInt();
+            ArrayBytes idByte = new ArrayBytes(4);
+            fis.read(idByte.getArray());
+            ArrayBytes lenght = new ArrayBytes(4);
+            fis.read(lenght.getArray());
+            int len = ByteArrayToX.byteArrayToInt(lenght.getArray());
+            ArrayBytes name = new ArrayBytes(len);
+            fis.read(name.getArray());
 
-            bytes_array = new byte[4];
-            fis.read(bytes_array);
-            int length = ByteBuffer.wrap(bytes_array).getInt();
+            ArrayBytes timestamp = new ArrayBytes(10);
+            fis.read(timestamp.getArray());
 
-            bytes_array = new byte[length];
-            fis.read(bytes_array);
-            String name = new String(bytes_array);
+            ArrayBytes value = new ArrayBytes(8);
+            fis.read(value.getArray());
 
-            bytes_array = new byte[10];
-            fis.read(bytes_array);
-            String zeitStempel = new String(bytes_array);
+            int m_byte = ByteArrayToX.byteArrayToInt(idByte.getArray());
+            String m_name = ByteArrayToX.byteArrayToString(name.getArray());
+            String m_timestamp = ByteArrayToX.byteArrayToString(timestamp.getArray());
+            double m_value = ByteArrayToX.byteArrayToDouble(value.getArray());
 
-            bytes_array = new byte[8];
-            fis.read(bytes_array);
-            double kurswert = ByteBuffer.wrap(bytes_array).getDouble();
-
-            return new StockEntry(id, name, zeitStempel, kurswert);
-        } catch (IOException e) {
-            log("Error by reading object");
+            entry  = new StockEntry(m_byte, m_name, m_timestamp, m_value);
+        } catch (IOException io) {
+            io.printStackTrace();
         }
-        return null;
-    }
-
-    public void close() {
-        try {
-            fis.close();
-        } catch (IOException e) {
-            log("Error by closing File");
-        }
-    }
-
-    private void log(Object o) {
-        System.out.println(o);
+        return  entry;
     }
 }
+
