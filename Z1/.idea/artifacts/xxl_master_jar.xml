@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="xxl-master:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/xxl_master_jar</output-path>
+    <root id="archive" name="xxl-master.jar">
+      <element id="module-output" name="xxl-master" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../xxl-master/testng-6.9.10.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
