@@ -55,6 +55,7 @@ public class SimpleTwoQueueBuffer<O,I,E> extends FSRBuffer<O,I,E> {
         else
         {
             if (a1.size() < sizea1){
+                IncreaseNotInBuffer();
                 a1.addFirst(result);
                 if (am.size() < sizeam ){
                     am.addLast(result);

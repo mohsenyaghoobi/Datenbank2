@@ -12,10 +12,6 @@ public abstract class FSRBuffer<O,I,E> extends Buffer<O,I,E> {
         super(capacity);}
     public int GetFSR()
     {
-        return counter;
-    }
-    public int GetNotInBuffer()
-    {
         return notInBuffer;
     }
     public void IncreaseNotInBuffer() {
