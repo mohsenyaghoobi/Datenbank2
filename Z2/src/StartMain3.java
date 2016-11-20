@@ -40,7 +40,6 @@ public class StartMain3 {
             System.out.println("insert "+str);
             f1.fix(owner, str,func2);
         }
-        System.out.println("Not In:"+f1.GetnotInBuffer());
         System.out.println("Total:"+f1.GetCounter());
     }
 }

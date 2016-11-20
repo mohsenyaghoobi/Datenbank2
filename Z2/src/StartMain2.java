@@ -45,7 +45,7 @@ public class StartMain2 {
                 break;
             }
         }
-        System.out.println("Not In:"+t1.GetNotInBuffer());
-        System.out.println("Total:"+t1.GetFSR());
+
+        System.out.println("Total:"+t1.getFSR());
     }
 }

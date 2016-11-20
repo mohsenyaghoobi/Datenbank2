@@ -1,28 +1,28 @@
 import xxl.core.io.Buffer;
 import xxl.core.functions.Function;
+
 /**
  * Created by Mohsen on 11-Nov-16.
  */
-public abstract class FSRBuffer<O,I,E> extends Buffer<O,I,E> {
-    int counter=0;
-    int notInBuffer=0;
-    int Capacity;
+public abstract class FSRBuffer<O, I, E> extends Buffer<O, I, E> {
+    int counter = 0;
+    int notInBuffer = 0;
 
     public FSRBuffer(int capacity) {
-        super(capacity);}
-    public int GetFSR()
-    {
-        return notInBuffer;
-    }
-    public void IncreaseNotInBuffer() {
-        notInBuffer++;
+        super(capacity);
     }
 
-    protected Buffer.Slot fix(O owner,I id,Function<? super I,? extends E> obtain)   throws IllegalStateException
-    {
-        Slot result = ( Slot ) super.fix( owner , id ,  obtain) ;
+    public double getFSR() {
+        if (counter != 0)
+            return (double) notInBuffer / (double) counter;
+        else
+            return 0;
+    }
+
+    protected Buffer.Slot fix(O owner, I id, Function<? super I, ? extends E> obtain) throws IllegalStateException {
+        Slot result = (Slot) super.fix(owner, id, obtain);
         counter++;
-        return result ;
+        return result;
     }
 
 }
