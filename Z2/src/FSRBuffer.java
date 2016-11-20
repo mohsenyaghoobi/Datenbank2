@@ -6,6 +6,7 @@ import xxl.core.functions.Function;
 public abstract class FSRBuffer<O,I,E> extends Buffer<O,I,E> {
     int counter=0;
     int notInBuffer=0;
+    int Capacity;
 
     public FSRBuffer(int capacity) {
         super(capacity);}

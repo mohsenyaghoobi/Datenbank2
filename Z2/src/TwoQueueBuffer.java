@@ -23,6 +23,7 @@ public class TwoQueueBuffer<O,I,E> extends FSRBuffer<O,I,E> {
         sizea1in=kin;
         sizea1out= ((int)((double)(capacity)/(100-kout)*kout));
         sizeam =capacity;
+
         // Size of a1in && a1out && am
         a1in = new ArrayDeque<Slot>(sizea1in);
         a1out = new ArrayDeque<Slot>(sizea1out);
@@ -44,6 +45,11 @@ public class TwoQueueBuffer<O,I,E> extends FSRBuffer<O,I,E> {
         if (a1in.contains(result)){
             a1in.remove(result);
             if (a1out.size() < sizeam) {
+                if (a1out.contains(result)){
+                    a1out.remove(result);
+                    a1out.addFirst(result);
+                }
+                else
                 a1out.addFirst(result);
             }
             else
@@ -51,12 +57,14 @@ public class TwoQueueBuffer<O,I,E> extends FSRBuffer<O,I,E> {
                 if (am.size() < sizeam){
                     am.addFirst(a1out.getLast());
                     a1out.removeLast();
+                    a1out.addFirst(result);
                 }
                 else
                 {
                     am.removeLast();
                     am.addFirst(a1out.getLast());
                     a1out.removeLast();
+                    a1out.addFirst(result);
                 }
             }
         }
@@ -106,28 +114,39 @@ public class TwoQueueBuffer<O,I,E> extends FSRBuffer<O,I,E> {
                     else
                     {
                         if (am.size() < sizeam){
-                            am.addFirst(a1out.getLast());
-                            a1out.removeLast();
-                            a1out.addFirst(a1in.getLast());
-                            a1in.removeLast();
-                            if (am.size() < sizeam){
-                                am.addLast(result);
-                            }
-                            else
+                            if (am.contains(a1out.getLast())){
+                                am.remove(a1out.getLast());
+                                am.addFirst(a1out.getLast());
+                                a1out.removeLast();
+                                a1out.addFirst(a1in.getLast());
+                                a1in.removeLast();
+                                a1in.addFirst(result);
+                            }else
                             {
-                                am.removeLast();
-                                am.addLast(result);
+                                am.addFirst(a1out.getLast());
+                                a1out.removeLast();
+                                a1out.addFirst(a1in.getLast());
+                                a1in.removeLast();
+                                a1in.addFirst(result);
                             }
                         }
-                        else
-                        {
+                        else {
                             am.removeLast();
-                            am.addFirst(a1out.getLast());
-                            a1out.removeLast();
-                            a1out.addFirst(a1in.getLast());
-                            a1in.removeLast();
+                            if (am.contains(a1out.getLast())) {
+                                am.remove(a1out.getLast());
+                                am.addFirst(a1out.getLast());
+                                a1out.removeLast();
+                                a1out.addFirst(a1in.getLast());
+                                a1in.removeLast();
+                                a1in.addFirst(result);
+                            } else {
+                                am.addFirst(a1out.getLast());
+                                a1out.removeLast();
+                                a1out.addFirst(a1in.getLast());
+                                a1in.removeLast();
+                                a1in.addFirst(result);
+                            }
                         }
-
                     }
                 }
             }

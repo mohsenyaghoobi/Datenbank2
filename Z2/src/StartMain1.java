@@ -26,15 +26,21 @@ public class StartMain1 {
                 return null;
             }
         };
-        ArrayList<String> arrayList = new ArrayList<String>(java.util.Arrays.asList("A","B","A","A","B","A","A","C","D","B","A","C","E","D"));
+        ArrayList<String> arrayList = new ArrayList<String>(java.util.Arrays.asList("A","B","A","A","B","A","A","C","D","B","A","C","A","D"));
         Iterator iterator = arrayList.iterator();
         String owner="mohsen";
 
-        while (iterator.hasNext()) {
-            String str = (String) iterator.next();
-            System.out.println("insert"+str);
-            s1.fix(owner, str,func2);
-
+        while (true) {
+            if (iterator.hasNext()) {
+                String str = (String) iterator.next();
+                System.out.println("insert " + str);
+                s1.fix(owner, str, func2);
+            }
+            else
+            {
+                s1.End();
+                break;
+            }
         }
         System.out.println("Not In:"+s1.GetNotInBuffer());
         System.out.println("Total:"+s1.GetFSR());
@@ -42,4 +48,5 @@ public class StartMain1 {
 
 
     }
+
 }

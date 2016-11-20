@@ -32,12 +32,20 @@ public class SimpleTwoQueueBuffer<O,I,E> extends FSRBuffer<O,I,E> {
         if (a1.contains(result)){
             a1.remove(result);
             if (am.size() < sizeam) {
-                am.addFirst(result);
+                if (am.contains(result)){
+                    am.remove(result);
+                    am.addFirst(result);
+                }else
+                    am.addFirst(result);
             }
             else
             {
-                am.remove(victim());
-                am.addFirst(result);
+                if (am.contains(result)){
+                    am.remove(result);
+                    am.addFirst(result);
+                }else
+                    am.removeLast();
+                    am.addFirst(result);
             }
         }
         else if (am.contains(result)){
@@ -59,21 +67,37 @@ public class SimpleTwoQueueBuffer<O,I,E> extends FSRBuffer<O,I,E> {
             }
             else
             {
-                if (am.size() < sizeam){
-                    am.addLast(a1.getLast());
-                    a1.removeLast();
-                    a1.addFirst(result);
+                if (am.size() < sizeam) {
+                    if (am.contains(a1.getLast())) {
+                        am.remove(a1.getLast());
+                        am.addFirst(a1.getLast());
+                        a1.removeLast();
+                        a1.addFirst(result);
+                        am.addLast(result);
+                    } else {
+                        am.addFirst(a1.getLast());
+                        a1.removeLast();
+                        a1.addFirst(result);
+                    }
                 }
                 else
                 {
-                    am.remove(victim());
-                    am.addLast(a1.getLast());
-                    a1.removeLast();
-                    a1.addFirst(result);
+                    am.removeLast();
+                    if (am.contains(a1.getLast())) {
+                        am.remove(a1.getLast());
+                        am.addFirst(a1.getLast());
+                        a1.removeLast();
+                        a1.addFirst(result);
+                        am.addLast(result);
+                    } else {
+                        am.addFirst(a1.getLast());
+                        a1.removeLast();
+                        a1.addFirst(result);
+                    }
                 }
             }
         }
-        return result ;
+       return result ;
     }
 
 
@@ -99,4 +123,13 @@ public class SimpleTwoQueueBuffer<O,I,E> extends FSRBuffer<O,I,E> {
             System.out.print(t.toString());
         }
     }
+    public void End(){
+        /*System.out.println("Finish!!!");*/
+        while (a1.size()>=0){
+            System.out.println("Finish!!!");
+            am.addFirst(a1.getLast());
+            a1.removeLast();
+        }
+    }
+
 }
