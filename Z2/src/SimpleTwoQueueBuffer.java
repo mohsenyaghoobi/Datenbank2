@@ -23,20 +23,13 @@ public class SimpleTwoQueueBuffer<O, I, E> extends FSRBuffer<O, I, E> {
         am = new ArrayDeque<Slot>(sizeam);
         System.out.println("sizeam:::" + sizeam);
         System.out.println("sizea1:::" + sizea1);
-
     }
 
     @Override
     protected Buffer.Slot fix(O owner, I id, Function<? super I, ? extends E> obtain) throws IllegalStateException {
-        Slot result  = null;
-        try {
-            result = (Slot) super.fix(owner, id, obtain);
-        }catch (IllegalStateException e){
-            handleSizeOverflow();
-        }
+        Slot result  = (Slot) super.fix(owner, id, obtain);
 
-        System.out.println("size am:::" + am.size());
-        System.out.println("size a1:::" + a1.size());
+        log(size());
 
         if(!am.isEmpty() && am.contains(result)){				// if X in Am
             am.remove(result);
@@ -45,47 +38,33 @@ public class SimpleTwoQueueBuffer<O, I, E> extends FSRBuffer<O, I, E> {
             a1.remove(result);
             am.add(result);
         }else{													// if X new
-            if(this.fixedSlots<=this.size){
+            if(size()<=capacity()){
                 //Do nothing
             }
             else {
-                handleSizeOverflow();
+
             }
             a1.add(result);
         }
-
         return result;
     }
 
     @Override
     protected Slot victim() {
+        notInBuffer++;
         if (a1.size() > kin) {
-            return a1.poll();
+            Slot victim = a1.poll();
+            log("Victim: " );
+            return victim;
         } else {
-            return am.poll();
+            Slot victim  = am.poll();
+            log("Victim: " + victim);
+            return victim;
         }
     }
 
-    public void Print() {
-        System.out.println("size of a1:::" + a1.size());
-        System.out.println("A1 Queue:");
-        for (Slot t : a1) {
-            System.out.print(t.toString());
-        }
-        System.out.println("size of am:::" + am.size());
-        System.out.println("Am Queue:");
-        for (Slot t : am) {
-            System.out.print(t.toString());
-        }
-    }
-
-    public void End() {
-        /*System.out.println("Finish!!!");*/
-        while (a1.size() >= 0) {
-            System.out.println("Finish!!!");
-            am.addFirst(a1.getLast());
-            a1.removeLast();
-        }
+    private void log(Object o){
+        System.out.println(o);
     }
 
 }

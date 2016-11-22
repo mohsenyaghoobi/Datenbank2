@@ -1,3 +1,5 @@
+import xxl.core.functions.Function;
+
 import java.util.*;
 
 /**
@@ -5,40 +7,54 @@ import java.util.*;
  */
 public class StartMain1 {
     public static void main(String[] args) {
-        SimpleTwoQueueBuffer s1 = new SimpleTwoQueueBuffer(4, 25);
-        xxl.core.functions.Function func2 = new xxl.core.functions.Function() {
-            @Override
-            public Object invoke(List arguments) {
-                return null;
-            }
-
-            @Override
-            public Object invoke() {
-                return null;
-            }
-
-            @Override
-            public Object invoke(Object argument) {
-                return null;
-            }
-
-            @Override
-            public Object invoke(Object argument0, Object argument1) {
-                return null;
-            }
-        };
-        ArrayList<String> arrayList = new ArrayList<String>(java.util.Arrays.asList("A", "B", "A", "A", "B", "A", "A", "C", "D", "B", "A", "C", "A", "E" , "D"));
-        Iterator iterator = arrayList.iterator();
-        String owner = "mohsen";
-        while (iterator.hasNext()) {
-            String str = (String) iterator.next();
-            System.out.println("insert " + str);
-            s1.fix(owner, str, func2);
+        ArrayList<String> list = new ArrayList<>();
+        String owner = "owner", refString = "ABAABAACDBACED";
+        for (int idx = 0; idx < refString.length(); ++idx){
+            list.add(refString.charAt(idx)+"");
         }
-
-        System.out.println("Total:" + s1.getFSR());
-
+        Iterator<String> iterator = list.iterator();
+        SimpleTwoQueueBuffer Simple2Qbuffer = new SimpleTwoQueueBuffer<>(4, 25);
+        iterator = list.iterator();
+        log("Simple 2Q (kin=25%)");
+        run2Q(owner, iterator, Simple2Qbuffer);
+        log("FSR: " + Simple2Qbuffer.getFSR());
+        log("\n");
 
     }
+    private static void log(Object aMessage){
+        System.out.println(aMessage);
+    }
+    private static void run2Q(String owner,
+                              Iterator<String> iterator,
+                              FSRBuffer<String, String, String> Simple2Qbuffer){
+        while (iterator.hasNext()) {
+            String i = (String)iterator.next();
+            System.out.println("insert "+i);
+            Simple2Qbuffer.update(owner, i, i, new Function<Object,Object>(){
 
+                @Override
+                public Object invoke(java.util.List<? extends Object> arguments) {
+                    // TODO Auto-generated method stub
+                    return null;
+                }
+
+                @Override
+                public Object invoke() {
+                    // TODO Auto-generated method stub
+                    return null;
+                }
+
+                @Override
+                public Object invoke(Object argument) {
+                    System.out.println("flush "+argument);
+                    return argument;
+                }
+
+                @Override
+                public Object invoke(Object argument0, Object argument1) {
+                    System.out.println("flush "+argument0);
+                    return argument0;
+                }}, true);
+        }
+    }
 }
