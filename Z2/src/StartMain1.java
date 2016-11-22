@@ -27,7 +27,7 @@ public class StartMain1 {
                 return null;
             }
         };
-        ArrayList<String> arrayList = new ArrayList<String>(java.util.Arrays.asList("A", "B", "A", "A", "B", "A", "A", "C", "D", "B", "A", "C", "A", "D"));
+        ArrayList<String> arrayList = new ArrayList<String>(java.util.Arrays.asList("A", "B", "A", "A", "B", "A", "A", "C", "D", "B", "A", "C", "A", "E" , "D"));
         Iterator iterator = arrayList.iterator();
         String owner = "mohsen";
         while (iterator.hasNext()) {

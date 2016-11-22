@@ -28,7 +28,13 @@ public class SimpleTwoQueueBuffer<O, I, E> extends FSRBuffer<O, I, E> {
 
     @Override
     protected Buffer.Slot fix(O owner, I id, Function<? super I, ? extends E> obtain) throws IllegalStateException {
-        Slot result = (Slot) super.fix(owner, id, obtain);
+        Slot result  = null;
+        try {
+            result = (Slot) super.fix(owner, id, obtain);
+        }catch (IllegalStateException e){
+            handleSizeOverflow();
+        }
+
         System.out.println("size am:::" + am.size());
         System.out.println("size a1:::" + a1.size());
 
