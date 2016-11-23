@@ -1,4 +1,3 @@
-import xxl.core.FSRLRUBuffer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,7 +8,7 @@ import java.util.List;
  */
 public class StartMain3 {
     public static void main(String[] args) {
-        FSRLRUBuffer f1= new FSRLRUBuffer(5);
+        FSRLRUBuffer f1= new FSRLRUBuffer(3);
         xxl.core.functions.Function func2= new xxl.core.functions.Function() {
             @Override
             public Object invoke(List arguments) {
@@ -23,12 +22,14 @@ public class StartMain3 {
 
             @Override
             public Object invoke(Object argument) {
-                return null;
+                System.out.println("flush "+argument);
+                return argument;
             }
 
             @Override
             public Object invoke(Object argument0, Object argument1) {
-                return null;
+                System.out.println("flush "+argument0);
+                return argument0;
             }
         };
         ArrayList<String> arrayList = new ArrayList<String>(java.util.Arrays.asList("A","B","A","A","B",
@@ -38,8 +39,8 @@ public class StartMain3 {
         while (iterator.hasNext()) {
             String str = (String) iterator.next();
             System.out.println("insert "+str);
-            f1.fix(owner, str,func2);
+            f1.update(owner, str,str ,func2, true);
         }
-        System.out.println("Total:"+f1.GetCounter());
+        System.out.println("Total:"+f1.getFSR());
     }
 }

@@ -19,6 +19,13 @@ public abstract class FSRBuffer<O, I, E> extends Buffer<O, I, E> {
             return 0;
     }
 
+    @Override
+    protected Slot victim() {
+        return null;
+    }
+    public void inscreaseNotInBuffer(){
+        notInBuffer++;
+    }
     protected Buffer.Slot fix(O owner, I id, Function<? super I, ? extends E> obtain) throws IllegalStateException {
         Slot result = (Slot) super.fix(owner, id, obtain);
         counter++;

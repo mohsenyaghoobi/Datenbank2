@@ -38,12 +38,6 @@ public class SimpleTwoQueueBuffer<O, I, E> extends FSRBuffer<O, I, E> {
             a1.remove(result);
             am.add(result);
         }else{													// if X new
-            if(size()<=capacity()){
-                //Do nothing
-            }
-            else {
-
-            }
             a1.add(result);
         }
         return result;
@@ -51,7 +45,7 @@ public class SimpleTwoQueueBuffer<O, I, E> extends FSRBuffer<O, I, E> {
 
     @Override
     protected Slot victim() {
-        notInBuffer++;
+        inscreaseNotInBuffer();
         if (a1.size() > kin) {
             Slot victim = a1.poll();
             log("Victim: " );
