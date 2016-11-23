@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="xxlcore:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/xxlcore_jar</output-path>
+    <root id="archive" name="xxlcore.jar">
+      <element id="module-output" name="xxlcore" />
+    </root>
+  </artifact>
+</component>
