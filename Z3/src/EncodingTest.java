@@ -1,9 +1,5 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- * Created by Mohsen on 02-Dec-16.
- */
 public class EncodingTest {
     public static void main(String arg[]) {
         int[] numbers = new int[]{1, 7, 56, 134, 256, 268, 384, 472, 512, 648};

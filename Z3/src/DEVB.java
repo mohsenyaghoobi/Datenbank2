@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Iterator;
-
 public class DEVB {
     int arrSize;
     // to encode Array of with DiffEn
