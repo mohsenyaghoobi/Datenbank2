@@ -1,54 +1,38 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Mohsen on 02-Dec-16.
  */
 public class StartMainiii {
-    public static void main(String[] args) {
-        int g1;
-        int g2;
-        DEVB t = new DEVB();
-        int [] list = {1,7,56,134,256,268,384,472,512,648};
-        int [] list1 = new int[list.length];
-        int [] list2 = new int[list.length];
-        byte[] list3= new byte[list.length];
-        int [] list4 = new int[list.length];
-        list1 = t.encodeDiff(list);
-        System.out.print("i)");
-        System.out.println("***Differential Encoding***");
-        System.out.print("Encoded: [  ");
-        for (int i=0; i<list1.length ; i++){
-            System.out.print(list1[i] + "  ");
-        }
-        System.out.println("  ]");
-        System.out.println("--------------------------------------------------------------" );
-        list2 = t.decodeDiff(list1);
-        System.out.print("Decoded: [  ");
-        for (int i=0; i<list2.length ; i++){
-            System.out.print(list2[i] + "  ");
-        }
-        System.out.println("  ]");
-        System.out.print("ii)");
-        System.out.println("***Variable Bytes Encoding***");
-        list3 = t.encodeVB(list);
-        System.out.print("Encoded: [  ");
-        for (int i=0; i<list3.length ; i++){
-            System.out.print(list3[i] + "  ");
-        }
-        System.out.println("  ]");
-        System.out.println("--------------------------------------------------------------" );
-        list4 = t.decodeVB(list3);
-        System.out.print("Decoded: [  ");
-        for (int i=0; i<list4.length ; i++){
-            System.out.print(list4[i] + "  ");
-        }
-        System.out.println("  ]");
-        g1 = list1.length*4;
-        g2 = list3.length*1;
-        System.out.println("Die Größe der Differential Encoding:::"+ g1);
-        System.out.println("Die Größe der Variable Bytes Encoding:::"+ g2);
-        System.out.println("Unserer Meinung nach ist VBencoding besser als Diffencoding, weil VBencoding weniger Bytes verbraucht ");
+    public static void main(String arg[]) {
+        int[] numbers = new int[]{1, 7, 56, 134, 256, 268, 384, 472, 512, 648};
+        DEVB devb = new DEVB();
+        //i. Diff Encoding
+        int[] diff = devb.encodeDiff(numbers);
 
+        //i. VB
+        byte[] vb = devb.encodeVB(numbers);
+
+        //i. diff and VB
+        byte[] diff_vb = devb.encodeVB(diff);
+
+        log("Differential Encode Size: " + diff.length * 4);
+        log("Differential Encode: " + Arrays.toString(diff));
+        log("Differential Decode: " + Arrays.toString(devb.decodeDiff(diff)));
+        log("##########################");
+        log("VB Encode Size: " + vb.length);
+        log("VB Encode: " + Arrays.toString(vb));
+        log("VB Decode: " + Arrays.toString(devb.decodeVB(vb)));
+        log("##########################");
+        log("Differential VB Encode Size: " + diff_vb.length);
+        log("Differential VB Encode: " + Arrays.toString(diff_vb));
+        log("Differential VB Decode" + Arrays.toString(devb.decodeDiff(devb.decodeVB(diff_vb))));
+        log("Unserer Meinung nach ist VBencoding besser als Differencoding, weil VBencoding weniger Bytes verbraucht");
+    }
+
+    private static void log(Object o) {
+        System.out.println(o);
     }
 
 }
