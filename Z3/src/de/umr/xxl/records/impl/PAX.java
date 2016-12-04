@@ -6,7 +6,6 @@ import xxl.core.io.converters.FixedSizeConverter;
 import java.io.*;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.stream.IntStream;
 
 
 public class PAX<T> implements Page<T> {
@@ -24,11 +23,12 @@ public class PAX<T> implements Page<T> {
 
     /**
      * create a PAX page to store data
-     * @param size size of Page
+     *
+     * @param size            size of Page
      * @param converterForNSM a converter for minipage (NSM page)
      * @param converterForPAX a converter for PAX
      * @param attributesSizes array of int which contains sizes of attributes
-     * */
+     */
     public PAX(int size, FixedSizeConverter<byte[]> converterForNSM, FixedSizeConverter<T> converterForPAX, int[] attributesSizes) {
         this.converterForNSM = converterForNSM;
         this.converterForPAX = converterForPAX;
