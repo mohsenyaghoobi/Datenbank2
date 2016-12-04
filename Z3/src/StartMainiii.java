@@ -28,7 +28,8 @@ public class StartMainiii {
         log("Differential VB Encode Size: " + diff_vb.length);
         log("Differential VB Encode: " + Arrays.toString(diff_vb));
         log("Differential VB Decode" + Arrays.toString(devb.decodeDiff(devb.decodeVB(diff_vb))));
-        log("Unserer Meinung nach ist VBencoding besser als Differencoding, weil VBencoding weniger Bytes verbraucht");
+        log("Unserer Meinung nach ist VBencoding besser als Differencoding, weil VBencoding weniger Bytes verbraucht. " +
+                "Und am besten is VB nach Differential Encoding, es spart noch mehr Speicher als VB allein");
     }
 
     private static void log(Object o) {
