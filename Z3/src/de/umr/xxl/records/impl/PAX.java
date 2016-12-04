@@ -10,25 +10,33 @@ import java.util.stream.IntStream;
 
 
 public class PAX<T> implements Page<T> {
-    private int attributesQuantity;
-    private int recordsQuantity;
-    private int[] atributesSizes;
-    private int freeSpace;
-    private int totalSize;
-    private NSMPage<byte[]>[] minipages;
+    private int attributesQuantity; // Quantity of Attributes
+    private int recordsQuantity; //Quantity if Records
+    private int[] atributesSizes; //Attribute sizes
+    private int freeSpace; //Free space in PAX
+    private int totalSize; //Size of PAX
+    private NSMPage<byte[]>[] minipages; // NSM is used as minipage
     /**
      * Converter used
      */
     private FixedSizeConverter<byte[]> converterForNSM;
     private FixedSizeConverter<T> converterForPAX;
 
+    /**
+     * create a PAX page to store data
+     * @param size size of Page
+     * @param converterForNSM a converter for minipage (NSM page)
+     * @param converterForPAX a converter for PAX
+     * @param attributesSizes array of int which contains sizes of attributes
+     * */
     public PAX(int size, FixedSizeConverter<byte[]> converterForNSM, FixedSizeConverter<T> converterForPAX, int[] attributesSizes) {
         this.converterForNSM = converterForNSM;
         this.converterForPAX = converterForPAX;
         this.totalSize = size;
         this.attributesQuantity = attributesSizes.length;
         this.minipages = new NSMPage[attributesQuantity];
-        for (int i = 0 ; i< minipages.length; i++){
+        for (int i = 0; i < minipages.length; i++)
+        {
             minipages[i] = new NSMPage<>(totalSize / attributesQuantity, converterForNSM);
         }
         this.recordsQuantity = minipages[0].getRecordSize();
@@ -54,24 +62,24 @@ public class PAX<T> implements Page<T> {
     @Override
     public short store(T element) {
         byte[] bytes = null;
+
         try (ByteArrayOutputStream b = new ByteArrayOutputStream())
         {
-            try (ObjectOutputStream o = new ObjectOutputStream(b))
+            try (DataOutputStream o = new DataOutputStream(b))
             {
-                o.writeObject(element);
+                converterForPAX.write(o, element);
             }
             bytes = b.toByteArray();
-            int dataLength = IntStream.of(atributesSizes).sum();
-            bytes = Arrays.copyOfRange(bytes, bytes.length-dataLength, bytes.length);
         } catch (IOException e)
         {
             System.out.println("Error by converting object T to byte array");
         }
+
         int offset = 0;
         short idx = 0;
         for (int i = 0; i < minipages.length; i++)
         {
-            byte[] array =  Arrays.copyOfRange(bytes, offset, offset + atributesSizes[i]);
+            byte[] array = Arrays.copyOfRange(bytes, offset, offset + atributesSizes[i]);
             idx = minipages[i].store(array);
             offset += atributesSizes[i];
         }
@@ -92,10 +100,10 @@ public class PAX<T> implements Page<T> {
             byte[] bs = minipages[i].get(id);
             bytes = concatenateArray(bytes, bs);
         }
-        try (DataInputStream b = new DataInputStream( new ByteArrayInputStream(bytes)))
+        try (DataInputStream b = new DataInputStream(new ByteArrayInputStream(bytes)))
         {
 
-                object = (T) converterForPAX.read(b);
+            object = (T) converterForPAX.read(b);
 
         } catch (IOException e2)
         {
