@@ -6,28 +6,21 @@ import java.util.ArrayList;
 public class StartMaini {
     public static void main(String[] args) {
         DEVB t = new DEVB();
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        ArrayList<Integer> al1 = new ArrayList<>();
-        ArrayList<Integer> al2 = new ArrayList<>();
-        arrayList.add(1);
-        arrayList.add(7);
-        arrayList.add(56);
-        arrayList.add(134);
-        arrayList.add(256);
-        arrayList.add(268);
-        arrayList.add(384);
-        arrayList.add(472);
-        arrayList.add(512);
-        arrayList.add(648);
-
-        al1.addAll(t.encodeDiff(arrayList));
-        for (int i:al1 ){
-            System.out.println("Encoded:::" + i );
+        int [] list = {1,7,56,134,256,268,384,472,512,648};
+        int [] list1 = new int[list.length];
+        int [] list2 = new int[list.length];
+        list1 = t.encodeDiff(list);
+        System.out.print("Encoded: [  ");
+        for (int i=0; i<list1.length ; i++){
+            System.out.print(list1[i] + "  ");
         }
+        System.out.println("  ]");
         System.out.println("--------------------------------------------------------------" );
-        al2.addAll(t.decodeDiff(al1));
-        for (int i:al2 ){
-            System.out.println("Decoded:::" + i );
+        list2 = t.decodeDiff(list1);
+        System.out.print("Decoded: [  ");
+        for (int i=0; i<list2.length ; i++){
+            System.out.print(list2[i] + "  ");
         }
+        System.out.println("  ]");
     }
 }

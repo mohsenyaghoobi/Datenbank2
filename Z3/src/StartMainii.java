@@ -5,7 +5,27 @@ import java.util.ArrayList;
  */
 public class StartMainii {
     public static void main(String[] args) {
-        DEVB t= new DEVB();
+        DEVB t = new DEVB();
+        int [] list = {1,7,56,134,256,268,384,472,512,648};
+        byte [] list1= new byte[list.length];
+        int [] list2 = new int[list.length];
+
+
+        list1 = t.encodeVB(list);
+        System.out.print("Encoded: [  ");
+        for (int i=0; i<list1.length ; i++){
+            System.out.print(list1[i] + "  ");
+        }
+        System.out.println("  ]");
+        System.out.println("--------------------------------------------------------------" );
+        list2 = t.decodeVB(list1);
+        System.out.print("Decoded: [  ");
+        for (int i=0; i<list2.length ; i++){
+            System.out.print(list2[i] + "  ");
+        }
+        System.out.println("  ]");
+    }
+/*
         ArrayList<Integer> arrayList= new ArrayList<>();
         ArrayList<Byte> b = new ArrayList<>();
         ArrayList<Integer> c= new ArrayList<>();
@@ -29,6 +49,7 @@ public class StartMainii {
         for(int i:c){
             System.out.println("Decoded Number:::" + i);
         }
+*/
     }
 
-}
+

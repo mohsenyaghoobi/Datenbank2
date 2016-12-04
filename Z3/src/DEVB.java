@@ -2,91 +2,107 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class DEVB {
-
-    // to encode Arraylist of with DiffEn
-    public ArrayList<Integer> encodeDiff(ArrayList<Integer> numbers){
-        ArrayList<Integer> list = new ArrayList<>();
-        Iterator<Integer> iter = numbers.iterator();
+    int arrSize;
+    // to encode Array of with DiffEn
+    public int[] encodeDiff(int[] numbers){
+        int[] list = new int[numbers.length];
         int temp=0;
         int addNumber=0;
-        while (iter.hasNext()){
-            addNumber = iter.next() - temp;
-            list.add(addNumber);
+        for(int i=0; i< numbers.length ; i++ ){
+            addNumber = numbers[i] - temp;
+            list[i] = addNumber;
             temp = addNumber+temp;
         }
         return list;
     }
 
-    // to decode Arraylist of with DiffEn
-    public ArrayList<Integer> decodeDiff(ArrayList<Integer> numbers){
-        ArrayList<Integer> list = new ArrayList<>();
-        Iterator<Integer> iter = numbers.iterator();
+    // to decode Array of with DiffEn
+    public int[] decodeDiff(int[] numbers){
+        int[] list = new int[numbers.length] ;
         int temp=0;
         int addNumber=0;
-        while (iter.hasNext()){
-            addNumber = iter.next() + temp;
-            list.add(addNumber);
+       for (int i=0; i<numbers.length; i++){
+            addNumber = numbers[i] + temp;
+            list[i] = addNumber;
             temp = addNumber;
         }
         return list;
     }
 
     // to encode number Variable Byte
-    public ArrayList<Byte> VBEncode(int number) {
-        ArrayList<Byte> bytes = new ArrayList<>();
-
+    public byte[] VBEncode(int number) {
+        byte[] bytes = new byte[0] ;
         while (true) {
             byte t = (byte) (number % 128);
-            Prepend(bytes, t);
+            bytes = Prepend(bytes, t);
+
             if (number < 128)
                 break;
             number = number / 128;
         }
-        int g=bytes.get(bytes.size()-1)+128;
-        bytes.set(bytes.size()-1,(byte)((byte)g));
-
+        bytes[bytes.length-1] += 128;
         return bytes;
     }
 
-    // to encode ArrayList<Integer> numbers Variable Byte
-    public ArrayList<Byte> encodeVB (ArrayList < Integer > numbers) {
-        ArrayList<Byte> bytestream = new ArrayList<>();
-        Iterator<Integer> iter = numbers.iterator();
-        while (iter.hasNext()) {
-            ArrayList<Byte> b = VBEncode(iter.next());
-            Extend(bytestream, b);
+    // to encode  int Array numbers Variable Byte
+    public byte[] encodeVB (int[] numbers) {
+        byte[] bytestream = new byte[0];
+
+        for (int i=0; i<numbers.length ; i++){
+            byte[] b = VBEncode(numbers[i]);
+            bytestream = Extend(bytestream, b);
         }
+        arrSize = numbers.length;
         return bytestream;
     }
-    // to decode Arraylist<Byte> numbers Variable Byte
-    public ArrayList<Integer> decodeVB(ArrayList<Byte> numbers ){
-        ArrayList<Integer> ALNumbers=new ArrayList<> ();
+
+    // to decode byte Array numbers Variable Byte
+    public int[] decodeVB(byte[] numbers ){
+        int [] ArNumbers = new int[arrSize];
         int n=0;
-        for (byte b:numbers) {
-            if (b>=0 && b < 128) {
-                n = 128 * n + b;
+        int temp=0;
+        for(int i=0; i<numbers.length; i++){
+            if ( numbers[i]>0) {
+                n = 128 * n + numbers[i];
             } else {
-                int t=128+(128-Math.abs(b));
-                n = 128* n + (t - 128);
-                ALNumbers.add(n);
+                n = 128* n + (byte)(numbers[i] - 128);
+                ArNumbers[temp] = n;
                 n = 0;
+                temp++;
             }
-
         }
-        return ALNumbers;
+        return ArNumbers;
     }
 
 
-    public void Prepend(ArrayList<Byte> list, byte element)
-    {
-        list.add(0,element);
-    }
+    public byte[] Prepend(byte[] list, byte element) {
 
-    public void Extend(ArrayList<Byte> b1,ArrayList<Byte> b2){
-        for(Byte h : b2)
-        {
-            b1.add(h);
+        int listLen = list.length;
+        if (listLen > 0) {
+            byte[] b = list;
+            byte[] temp = new byte[listLen + 1];
+            for (int i = 0; i < b.length; i++) {
+                temp[i] = b[i];
+            }
+            for (int i = temp.length; i > 1; i--) {
+                temp[i-1] = temp[i - 2];
+            }
+            temp[0] = element;
+            return temp;
+        } else {
+            byte[] temp = new byte[listLen + 1];
+            temp[0] = element;
+            return temp;
         }
     }
+
+    public byte[] Extend(byte[] b1,byte[] b2){
+        int b1Len = b1.length;
+        int b2Len = b2.length;
+        byte[] b3= new byte[b1Len+b2Len];
+        System.arraycopy(b1, 0, b3, 0, b1Len);
+        System.arraycopy(b2, 0, b3, b1Len, b2Len);
+        return b3;
+  }
 
 }

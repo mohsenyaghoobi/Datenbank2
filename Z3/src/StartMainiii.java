@@ -6,41 +6,44 @@ import java.util.ArrayList;
 public class StartMainiii {
     public static void main(String[] args) {
         DEVB t = new DEVB();
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        ArrayList<Integer> al1 = new ArrayList<>();
-        ArrayList<Integer> al2 = new ArrayList<>();
-        ArrayList<Byte> b = new ArrayList<>();
-        ArrayList<Integer> c= new ArrayList<>();
-        arrayList.add(1);
-        arrayList.add(7);
-        arrayList.add(56);
-        arrayList.add(134);
-        arrayList.add(256);
-        arrayList.add(268);
-        arrayList.add(384);
-        arrayList.add(472);
-        arrayList.add(512);
-        arrayList.add(648);
-        System.out.println("                    ****Diffrential Encoding****                        " );
-        al1.addAll(t.encodeDiff(arrayList));
-        for (int i:al1 ){
-            System.out.println("Encoded:::" + i );
+        int [] list = {1,7,56,134,256,268,384,472,512,648};
+        int [] list1 = new int[list.length];
+        int [] list2 = new int[list.length];
+        byte[] list3= new byte[list.length];
+        int [] list4 = new int[list.length];
+        list1 = t.encodeDiff(list);
+        System.out.println("***Differential Encoding***");
+        System.out.print("Encoded: [  ");
+        for (int i=0; i<list1.length ; i++){
+            System.out.print(list1[i] + "  ");
         }
+        System.out.println("  ]");
         System.out.println("--------------------------------------------------------------" );
-        al2.addAll(t.decodeDiff(al1));
-        for (int i:al2 ){
-            System.out.println("Decoded:::" + i );
+        list2 = t.decodeDiff(list1);
+        System.out.print("Decoded: [  ");
+        for (int i=0; i<list2.length ; i++){
+            System.out.print(list2[i] + "  ");
         }
-        System.out.println("                    ****Variable Bytes Encoding****                   " );
-        b.addAll(t.encodeVB(arrayList));
-        for(byte b1:b){
-            System.out.println("Encoded:::" + b1);
+        System.out.println("  ]");
+
+        System.out.println("***Variable Bytes Encoding***");
+        list3 = t.encodeVB(list);
+        System.out.print("Encoded: [  ");
+        for (int i=0; i<list3.length ; i++){
+            System.out.print(list3[i] + "  ");
         }
-        System.out.println("----------------------------------------------------------------");
-        c.addAll(t.decodeVB(b));
-        for(int i:c){
-            System.out.println("Decoded:::" + i);
+        System.out.println("  ]");
+        System.out.println("--------------------------------------------------------------" );
+        list4 = t.decodeVB(list3);
+        System.out.print("Decoded: [  ");
+        for (int i=0; i<list4.length ; i++){
+            System.out.print(list4[i] + "  ");
         }
+        System.out.println("  ]");
+
+
     }
 
 }
+
+
