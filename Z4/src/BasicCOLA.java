@@ -30,6 +30,7 @@ public class BasicCOLA<K extends Comparable<K>, V> {
      * Stores a flag for filling state of each array
      */
     private ArrayList<Boolean> filled;
+    private int usedSpaceInFirstBlock = 0;
 
     /**
      * Underlying container
@@ -53,6 +54,7 @@ public class BasicCOLA<K extends Comparable<K>, V> {
      */
     private int levelsInCache;
 
+
     /**
      * Creates a new basic COLA index structure with an underlying container and the given element size in bytes.
      *
@@ -67,14 +69,12 @@ public class BasicCOLA<K extends Comparable<K>, V> {
         this.elementSize = elementSize;
         this.elementsPerBlock = DISK_BLOCK_SIZE / elementSize;
         this.levelsInCache = (int) (Math.log(elementsPerBlock) / Math.log(2));
-        this.cache = new ArrayList<COLABlock<K, V>>(levelsInCache);
+        this.cache = new ArrayList<COLABlock<K, V>>(elementsPerBlock);
         String info = "elementSize = " + elementSize + "\n" +
                 "elementsPerBlock = " + elementsPerBlock + "\n" +
                 "levelsInCache = " + levelsInCache + "\n";
         Log(info);
         // TODO: this.container = .... ConverterContainer f�r rawContainer erzeugen
-        for (int i = 0; i < levelsInCache; i++)
-            this.cache.add(new COLABlock<K, V>((int) Math.pow(2, i)));
 
         this.container = new ConverterContainer(rawContainer, new Converter<COLABlock<K, V>>() {
             @Override
@@ -118,6 +118,7 @@ public class BasicCOLA<K extends Comparable<K>, V> {
             arrayOffsets.add(reserveArray(lev));
         }
         Log("Insert to level: " + lev + " [ " + key + " , " + value + "]");
+
         ArrayList<Pair<K, V>> collection = new ArrayList<>();
         collection.add(new Pair<K, V>(key, value));
 
@@ -125,16 +126,15 @@ public class BasicCOLA<K extends Comparable<K>, V> {
         int index = 0;
         while (filled.get(index) && index < filled.size()) {
             if (index < levelsInCache) {
-                COLABlock<K, V> block = cache.get(index);
-                for (int i = 0; i < block.getSize(); i++) {
-                    collection.add(block.get(i));
+                for (int blockcounter = 0; blockcounter < (int) Math.pow(2, index); blockcounter++) {
+                    COLABlock<K, V> block = cache.get((int) (arrayOffsets.get(index) + blockcounter));
+                    collection.add(block.get(0));
+
                 }
             } else {
                 for (int blockcounter = 0; blockcounter < (int) Math.pow(2, index); blockcounter++) {
                     COLABlock<K, V> block = (COLABlock<K, V>) container.get(arrayOffsets.get(index) + blockcounter * DISK_BLOCK_SIZE, false);
-                    for (int i = 0; i < block.getSize(); i++) {
-                        collection.add(block.get(i));
-                    }
+                    collection.add(block.get(0));
                 }
             }
             //reset the value of filled
@@ -147,22 +147,21 @@ public class BasicCOLA<K extends Comparable<K>, V> {
 
         //add new COLA BLOCK to cache or extend disk
         if (lev < levelsInCache) {
-            COLABlock<K, V> block = new COLABlock<>(collection.size());
+            //COLABlock<K, V> block = new COLABlock<>(collection.size());
             //add all elements of new sorted collection to new COLA Block
             for (int i = 0; i < collection.size(); i++) {
-                block.set(i, collection.get(i));
+                COLABlock<K, V> block = new COLABlock<>(elementsPerBlock);
+                block.set(0, collection.get(i));
+                cache.set((int) (arrayOffsets.get(lev) + i), block);
             }
-            cache.set(lev, block);
             Log("Inserted Cache!!!" + " level: " + lev);
         } else {
             for (int i = 0; i < collection.size(); i++) {
                 COLABlock<K, V> block = new COLABlock<>(elementsPerBlock);
                 block.set(0, collection.get(i));
-                Log("DEBUG: " + (arrayOffsets.get(lev) + i * DISK_BLOCK_SIZE));
                 container.update(arrayOffsets.get(lev) + i * DISK_BLOCK_SIZE, block, false);
             }
             Log("Inserted Extend Disk!!!" + " level: " + lev + " offset: " + arrayOffsets.get(lev));
-
         }
     }
 
@@ -177,14 +176,12 @@ public class BasicCOLA<K extends Comparable<K>, V> {
      */
     public V searchElement(K key) throws NoSuchElementException {
         V result = null;
-        for (int i = 0; i < filled.size(); i++) {
-            if (filled.get(i)) {
-                if (i < levelsInCache) {
-                    COLABlock<K, V> clb = cache.get(i);
-                    result = binarySearch(key, clb);
+        for (int level = 0; level < filled.size(); level++) {
+            if (filled.get(level)) {
+                if (level < levelsInCache) {
+                    result = binarySeachInLevel(key, level);
                 } else {
-                    COLABlock<K, V> clb = (COLABlock<K, V>) container.get(arrayOffsets.get(i));
-                    result = binarySearch(key, clb);
+                    result = binarySeachInLevel(key, level);
                 }
             }
             if (result != null) break;
@@ -192,29 +189,36 @@ public class BasicCOLA<K extends Comparable<K>, V> {
         return result;
     }
 
-    private V binarySearch(K key, COLABlock<K, V> block) {
-        Log("Block size: " + block.getSize());
+    private V binarySeachInLevel(K key, int level) {
         int min = 0;
-        int max = block.getSize() - 1;
+        int max = (int) Math.pow(level, 2);
+
         while (max >= min) {
-            int middle = (min + max) / 2;
-            Pair<K, V> kvPair = block.get(middle);
+            int middle = min + max / 2;
+            COLABlock<K, V> block = null;
+            if (level < levelsInCache) {
+                block = cache.get((int) (arrayOffsets.get(level) + middle));
+            } else {
+                block = (COLABlock<K, V>) container.get(arrayOffsets.get(level) + middle * DISK_BLOCK_SIZE);
+            }
+            Pair<K, V> kvPair = block.get(0);
             if (kvPair.getFirst().compareTo(key) == 0) {
-                Log("Key: " + key + " found !");
+                Log("++ Key: " + key + " found!");
                 return kvPair.getSecond();
             }
             if (kvPair.getFirst().compareTo(key) < 0) {
-                Log("Key: " + key + " find :" + kvPair.getFirst() + " go to right");
+                Log("++ Key: " + key + " found :" + kvPair.getFirst() + " go to right");
                 min = middle + 1;
             }
             if (kvPair.getFirst().compareTo(key) > 0) {
-                Log("Key: " + key + " find :" + kvPair.getFirst() + " go to left");
+                Log("++ Key: " + key + " found :" + kvPair.getFirst() + " go to left");
                 max = middle - 1;
             }
         }
-        Log("Key not found !");
+        Log("++ Key not found !");
         return null;
     }
+
 
     /**
      * Writes the cached arrays to disk.
@@ -224,8 +228,10 @@ public class BasicCOLA<K extends Comparable<K>, V> {
         Log("Writing all data in cache to extend disk ...");
         for (int i = 0; i < levelsInCache; i++) {
             if (filled.get(i)) {
-                COLABlock<K, V> clb = cache.get(i);
-                arrayOffsets.add((Long) container.insert(clb));
+                for (int blockcounter = 0; blockcounter < (int) Math.pow(2, i); blockcounter++) {
+                    COLABlock<K, V> block = cache.get((int) (arrayOffsets.get(i) + blockcounter));
+                    arrayOffsets.add((Long) container.insert(block));
+                }
             }
         }
     }
@@ -255,8 +261,10 @@ public class BasicCOLA<K extends Comparable<K>, V> {
             // ebenfalls in COLABlocks gespeichert. Um keinen Speicher zu verschwenden,
             // werden jedoch auch Teile meherer Arrays in einem COLA-Block abgelegt.
             Log("Reserve space in cache");
-            cache.add(new COLABlock<K, V>((int) Math.pow(2, level)));
-            return (long) level;
+            int size = (int) Math.pow(2, level);
+            for (int i = 0; i < size; i++)
+                this.cache.add(new COLABlock<K, V>(elementsPerBlock));
+            return (long) size - 1;
         }
     }
 
@@ -302,7 +310,7 @@ public class BasicCOLA<K extends Comparable<K>, V> {
             for (int j = 0; j < block.getSize(); j++) {
                 sb.append(block.get(j).getFirst() + "  ");
             }
-        }else{
+        } else {
             for (int blockcounter = 0; blockcounter < (int) Math.pow(2, level); blockcounter++) {
                 COLABlock<K, V> b = (COLABlock<K, V>) container.get(arrayOffsets.get(level) + blockcounter * DISK_BLOCK_SIZE, false);
                 for (int j = 0; j < b.getSize(); j++) {

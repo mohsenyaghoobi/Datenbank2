@@ -1,7 +1,6 @@
 import xxl.core.collections.containers.io.BlockFileContainer;
 import xxl.core.cursors.sources.io.FileInputCursor;
 import xxl.core.io.converters.Converter;
-import xxl.core.io.converters.DoubleArrayConverter;
 import xxl.core.io.converters.LongConverter;
 
 import java.io.DataInput;
@@ -32,7 +31,7 @@ public class Main {
             @Override
             public Double read(DataInput dataInput, Double object)
                     throws IOException {
-                Double d  = dataInput.readDouble();
+                Double d = dataInput.readDouble();
                 return d;
             }
 
@@ -60,13 +59,15 @@ public class Main {
             Log(d.toString() + " :: " + value);
             cola.insertElement(key, value);
             Log("--------------------------");
-            Log ("Actual State:");
+            Log("Actual State:");
             Log(cola.toString());
             Log("--------------------------");
             counter++;
         }
 
-        Log(cola.searchElement(key));
+        Log("Seach "  + key  + " found: " + cola.searchElement(key));
+        Log("Seach "  + 1231282800000L  + " found: " + cola.searchElement(1231282800000L));
+        Log("Seach "  + 1262905200000L  + " found: " + cola.searchElement(1262905200000L));
         Log(cola.toString());
         Log("Number of elements: " + counter);
         cola.close();
