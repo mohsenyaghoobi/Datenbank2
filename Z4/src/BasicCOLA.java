@@ -1,9 +1,6 @@
-import javafx.beans.binding.ObjectBinding;
 import xxl.core.collections.containers.Container;
 import xxl.core.collections.containers.io.ConverterContainer;
-import xxl.core.cursors.Cursor;
 import xxl.core.functions.Constant;
-import xxl.core.io.IteratorInputStream;
 import xxl.core.io.converters.Converter;
 import xxl.core.util.Pair;
 
@@ -11,7 +8,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -85,11 +81,11 @@ public class BasicCOLA<K extends Comparable<K>, V> {
             public COLABlock<K, V> read(DataInput dataInput,
                                         COLABlock<K, V> object) throws IOException {
                 COLABlock<K, V> colaBlock = new COLABlock<>(elementsPerBlock);
-                for (int i = 0; i < colaBlock.getSize(); i++) {
-                    colaBlock.set(i, new Pair<K, V>(
-                            keyConverter.read(dataInput),
-                            valueConverter.read(dataInput)));
-                }
+
+                colaBlock.set(0, new Pair<K, V>(
+                        keyConverter.read(dataInput),
+                        valueConverter.read(dataInput)));
+
                 return colaBlock;
             }
 
@@ -134,11 +130,12 @@ public class BasicCOLA<K extends Comparable<K>, V> {
                     collection.add(block.get(i));
                 }
             } else {
-
-                    COLABlock<K, V> block = (COLABlock<K, V>) container.get(arrayOffsets.get(index), false);
+                for (int blockcounter = 0; blockcounter < (int) Math.pow(2, index); blockcounter++) {
+                    COLABlock<K, V> block = (COLABlock<K, V>) container.get(arrayOffsets.get(index) + blockcounter * DISK_BLOCK_SIZE, false);
                     for (int i = 0; i < block.getSize(); i++) {
                         collection.add(block.get(i));
                     }
+                }
             }
             //reset the value of filled
             filled.set(index, false);
@@ -147,26 +144,26 @@ public class BasicCOLA<K extends Comparable<K>, V> {
         filled.set(lev, true);
         //sort list of Pair <K,V>
         collection.sort((Pair<K, V> o1, Pair<K, V> o2) -> o1.getFirst().compareTo(o2.getFirst()));
-        COLABlock<K, V> block = new COLABlock<>(collection.size());
-
-        //add all elements of new sorted collection to new COLA Block
-        for (int i = 0; i < collection.size(); i++) {
-            block.set(i, collection.get(i));
-        }
 
         //add new COLA BLOCK to cache or extend disk
         if (lev < levelsInCache) {
+            COLABlock<K, V> block = new COLABlock<>(collection.size());
+            //add all elements of new sorted collection to new COLA Block
+            for (int i = 0; i < collection.size(); i++) {
+                block.set(i, collection.get(i));
+            }
             cache.set(lev, block);
             Log("Inserted Cache!!!" + " level: " + lev);
         } else {
-            container.update(arrayOffsets.get(lev), block, false);
-            boolean id = container.contains(arrayOffsets.get(lev));
-            Object testObject = container.get(arrayOffsets.get(lev), false);
-            COLABlock<K, V> testBlock = (COLABlock<K, V>) container.get(arrayOffsets.get(lev), false);
+            for (int i = 0; i < collection.size(); i++) {
+                COLABlock<K, V> block = new COLABlock<>(elementsPerBlock);
+                block.set(0, collection.get(i));
+                Log("DEBUG: " + (arrayOffsets.get(lev) + i * DISK_BLOCK_SIZE));
+                container.update(arrayOffsets.get(lev) + i * DISK_BLOCK_SIZE, block, false);
+            }
             Log("Inserted Extend Disk!!!" + " level: " + lev + " offset: " + arrayOffsets.get(lev));
-            Log(container.size());
-        }
 
+        }
     }
 
 
@@ -190,7 +187,7 @@ public class BasicCOLA<K extends Comparable<K>, V> {
                     result = binarySearch(key, clb);
                 }
             }
-            if (result!=null) break;
+            if (result != null) break;
         }
         return result;
     }
@@ -246,11 +243,11 @@ public class BasicCOLA<K extends Comparable<K>, V> {
 
             Long id = (Long) container.reserve(new Constant(null));
             long arrayLength = 1L << level;
-            long blockCount = arrayLength / elementsPerBlock;
+            long blockCount = arrayLength; // elementsPerBlock;
 
             for (int i = 1; i < blockCount; i++)
                 container.reserve(new Constant(null));
-            Log("Reserve space in extend disk (id: " +  id  +")");
+            Log("Reserve space in extend disk (id: " + id + ")");
             return id;
         } else {
             // TODO Das Array ist kleiner als ein COLABlock und wird
@@ -271,15 +268,14 @@ public class BasicCOLA<K extends Comparable<K>, V> {
     public String toString() {
         boolean inCache = false;
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < filled.size(); i++) {
-            if (i < levelsInCache) {
+        for (int level = 0; level < filled.size(); level++) {
+            if (level < levelsInCache) {
                 inCache = true;
-                COLABlock<K, V> block = cache.get(i);
-                sb.append(buildString(block, i, inCache).toString());
+                COLABlock<K, V> block = cache.get(level);
+                sb.append(buildString(block, level, inCache).toString());
             } else {
                 inCache = false;
-                COLABlock<K, V> block = (COLABlock<K, V>) container.get(arrayOffsets.get(i));
-                sb.append(buildString(block, i, inCache).toString());
+                sb.append(buildString(null, level, inCache).toString());
             }
         }
         return sb.toString();
@@ -288,19 +284,31 @@ public class BasicCOLA<K extends Comparable<K>, V> {
     private StringBuilder buildString(COLABlock<K, V> block, int level, boolean inCache) {
         StringBuilder sb = new StringBuilder();
 
-        if (inCache)
+        if (inCache) {
             sb.append("Cache  :");
-        else
+        } else {
             sb.append("Extend :");
-        if (filled.get(level))
+        }
+        if (filled.get(level)) {
             sb.append("[*]");
-        else
+        } else {
             sb.append("[ ]");
+        }
 
-        sb.append("Level: " + level + " " + " Size: " + block.getSize() + " Offset: " + arrayOffsets.get(level));
+        sb.append("Level: " + level + " Offset: " + arrayOffsets.get(level));
         sb.append("[ ");
-        for (int j = 0; j < block.getSize(); j++) {
-            sb.append(block.get(j).getFirst() + "  ");
+
+        if (inCache) {
+            for (int j = 0; j < block.getSize(); j++) {
+                sb.append(block.get(j).getFirst() + "  ");
+            }
+        }else{
+            for (int blockcounter = 0; blockcounter < (int) Math.pow(2, level); blockcounter++) {
+                COLABlock<K, V> b = (COLABlock<K, V>) container.get(arrayOffsets.get(level) + blockcounter * DISK_BLOCK_SIZE, false);
+                for (int j = 0; j < b.getSize(); j++) {
+                    sb.append(b.get(j).getFirst() + "  ");
+                }
+            }
         }
         sb.append("] \n");
         return sb;

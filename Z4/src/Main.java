@@ -18,14 +18,12 @@ public class Main {
             @Override
             public Long read(DataInput dataInput, Long object) throws IOException {
                 Long l = dataInput.readLong();
-                Log("++ Debug : Converter Long Read: "  + l);
                 return l;
             }
 
             @Override
             public void write(DataOutput dataOutput, Long object)
                     throws IOException {
-                Log("++ Debug : Converter Long Write: "  + object);
                 dataOutput.writeLong(object);
             }
         };
@@ -35,14 +33,12 @@ public class Main {
             public Double read(DataInput dataInput, Double object)
                     throws IOException {
                 Double d  = dataInput.readDouble();
-                Log("++ Debug : Double Converter Read: " + d);
                 return d;
             }
 
             @Override
             public void write(DataOutput dataOutput, Double object)
                     throws IOException {
-                Log("++ Debug : Double Converter Write: " + object);
                 dataOutput.writeDouble(object);
             }
         };
