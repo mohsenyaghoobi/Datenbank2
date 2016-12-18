@@ -30,7 +30,6 @@ public class BasicCOLA<K extends Comparable<K>, V> {
      * Stores a flag for filling state of each array
      */
     private ArrayList<Boolean> filled;
-    private int usedSpaceInFirstBlock = 0;
 
     /**
      * Underlying container
@@ -108,6 +107,19 @@ public class BasicCOLA<K extends Comparable<K>, V> {
      */
     public void insertElement(K key, V value) {
         //find out which level is still free
+        int lev = findUnfilledLevel();
+        Log("Insert to level: " + lev + " [ " + key + " , " + value + "]");
+        // collect all data , insert new data and sort the data
+        ArrayList<Pair<K, V>> collection = collectAllData();
+        collection.add(new Pair<K, V>(key, value));
+        collection.sort((Pair<K, V> o1, Pair<K, V> o2) -> o1.getFirst().compareTo(o2.getFirst()));
+        insertDataFromCollectionToLevel(collection, lev);
+    }
+    /**
+     * search in the structure and return id of unfilled level
+     * @return level
+     * */
+    private int findUnfilledLevel() {
         int lev = 0;
         try {
             while (filled.get(lev)) {
@@ -117,10 +129,15 @@ public class BasicCOLA<K extends Comparable<K>, V> {
             filled.add(false);
             arrayOffsets.add(reserveArray(lev));
         }
-        Log("Insert to level: " + lev + " [ " + key + " , " + value + "]");
+        return lev;
+    }
 
+    /**
+     * collect all data in the structure and then save them in a list of key and value
+     * @return list of key and value
+     * */
+    private ArrayList<Pair<K, V>> collectAllData() {
         ArrayList<Pair<K, V>> collection = new ArrayList<>();
-        collection.add(new Pair<K, V>(key, value));
 
         //save all of elements from 0 to lev
         int index = 0;
@@ -142,13 +159,18 @@ public class BasicCOLA<K extends Comparable<K>, V> {
             filled.set(index, false);
             index++;
         }
-        filled.set(lev, true);
-        //sort list of Pair <K,V>
-        collection.sort((Pair<K, V> o1, Pair<K, V> o2) -> o1.getFirst().compareTo(o2.getFirst()));
+        return collection;
+    }
 
+
+    /**
+     * insert collection of data to given level
+     * @param collection collection of data
+     * @param lev level
+     * */
+    private void insertDataFromCollectionToLevel(ArrayList<Pair<K, V>> collection, int lev) {
         //add new COLA BLOCK to cache or extend disk
         if (lev < levelsInCache) {
-            //COLABlock<K, V> block = new COLABlock<>(collection.size());
             //add all elements of new sorted collection to new COLA Block
             for (int i = 0; i < collection.size(); i++) {
                 COLABlock<K, V> block = new COLABlock<>(elementsPerBlock);
@@ -166,6 +188,7 @@ public class BasicCOLA<K extends Comparable<K>, V> {
             }
             Log("Inserted Extend Disk!!!" + " level: " + lev + " offset: " + arrayOffsets.get(lev));
         }
+        filled.set(lev, true);
     }
 
 
@@ -192,9 +215,15 @@ public class BasicCOLA<K extends Comparable<K>, V> {
         return result;
     }
 
+
+    /**
+     * binary search a key on a given level
+     * @param key key
+     * @param level level
+     * */
     private V binarySeachInLevel(K key, int level) {
         int min = 0;
-        int max = (int) Math.pow(level, 2);
+        int max = (int) Math.pow(level, 2)/elementsPerBlock;
 
         while (max >= min) {
             int middle = (min + max) / 2;
@@ -210,50 +239,47 @@ public class BasicCOLA<K extends Comparable<K>, V> {
                 return kvPair.getSecond();
             }
             if (kvPair.getFirst().compareTo(key) < 0) {
-                V value = binaryFindInBlock(key, block);
+                V value = binarySearchInBlock(key, block);
                 if (value != null) {
                     Log("++ Key: " + key + " found!");
                     return value;
                 }
-                Log("++ Key: " + key + " found :" + kvPair.getFirst() + " go to right");
                 min = middle + 1;
             }
             if (kvPair.getFirst().compareTo(key) > 0) {
-                V value = binaryFindInBlock(key, block);
+                V value = binarySearchInBlock(key, block);
                 if (value != null) {
                     Log("++ Key: " + key + " found!");
                     return value;
                 }
-                Log("++ Key: " + key + " found :" + kvPair.getFirst() + " go to left");
                 max = middle - 1;
             }
         }
-        Log("++ Key not found !");
+        Log("++ Key not found in level :  " + level );
         return null;
     }
 
-    private V binaryFindInBlock(K key, COLABlock<K, V> block) {
+    /**
+     * binary search a key on a given block
+     * @param key key
+     * @param block block
+     * */
+    private V binarySearchInBlock(K key, COLABlock<K, V> block) {
         int min = 0;
         int max = block.getSize();
-
         while (max >= min) {
             int middle = (min + max) / 2;
-
             if (middle >= block.getSize()) {// fix für cache
                 return null;
             }
-
             Pair<K, V> kvPair = block.get(middle);
             if (kvPair.getFirst().compareTo(key) == 0) {
-                Log("+++ Key: " + key + " found!");
                 return kvPair.getSecond();
             }
             if (kvPair.getFirst().compareTo(key) < 0) {
-                Log("+++ Key: " + key + " found :" + kvPair.getFirst() + " go to right");
                 min = middle + 1;
             }
             if (kvPair.getFirst().compareTo(key) > 0) {
-                Log("+++ Key: " + key + " found :" + kvPair.getFirst() + " go to left");
                 max = middle - 1;
             }
         }
@@ -308,10 +334,10 @@ public class BasicCOLA<K extends Comparable<K>, V> {
             return (long) size - 1;
         }
     }
-
     public void Log(Object o) {
         System.out.println(o);
     }
+
 
     @Override
     public String toString() {
@@ -329,7 +355,6 @@ public class BasicCOLA<K extends Comparable<K>, V> {
         }
         return sb.toString();
     }
-
     private StringBuilder buildString(COLABlock<K, V> block, int level, boolean inCache) {
         StringBuilder sb = new StringBuilder();
 
