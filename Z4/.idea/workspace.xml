@@ -19,15 +19,16 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="BasicCOLA.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="BasicCOLA.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/BasicCOLA.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1134">
-              <caret line="87" column="17" lean-forward="true" selection-start-line="87" selection-start-column="17" selection-end-line="87" selection-end-column="17" />
+            <state relative-caret-position="156">
+              <caret line="227" column="28" lean-forward="true" selection-start-line="227" selection-start-column="28" selection-end-line="227" selection-end-column="28" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#11915#11916#0" expanded="true" />
-                <element signature="e#11952#11953#0" expanded="true" />
+                <element signature="class#2728:3708" expanded="false" />
+                <element signature="e#12467#12468#0" expanded="true" />
+                <element signature="e#12504#12505#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -36,7 +37,7 @@
       <file leaf-file-name="COLABlock.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/COLABlock.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
+            <state relative-caret-position="651">
               <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
               <folding>
                 <element signature="e#403#404#0" expanded="true" />
@@ -47,11 +48,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="50" column="22" lean-forward="true" selection-start-line="50" selection-start-column="22" selection-end-line="50" selection-end-column="22" />
+            <state relative-caret-position="196">
+              <caret line="53" column="24" lean-forward="true" selection-start-line="53" selection-start-column="24" selection-end-line="53" selection-end-column="24" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="class#563:975" expanded="false" />
@@ -531,8 +532,9 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#11915#11916#0" expanded="true" />
-            <element signature="e#11952#11953#0" expanded="true" />
+            <element signature="class#2728:3708" expanded="false" />
+            <element signature="e#12467#12468#0" expanded="true" />
+            <element signature="e#12504#12505#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -567,8 +569,9 @@
           <caret line="171" column="0" lean-forward="true" selection-start-line="171" selection-start-column="0" selection-end-line="171" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#11915#11916#0" expanded="true" />
-            <element signature="e#11952#11953#0" expanded="true" />
+            <element signature="class#2728:3708" expanded="false" />
+            <element signature="e#12467#12468#0" expanded="true" />
+            <element signature="e#12504#12505#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -618,8 +621,9 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#11915#11916#0" expanded="true" />
-            <element signature="e#11952#11953#0" expanded="true" />
+            <element signature="class#2728:3708" expanded="false" />
+            <element signature="e#12467#12468#0" expanded="true" />
+            <element signature="e#12504#12505#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -657,8 +661,9 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#11915#11916#0" expanded="true" />
-            <element signature="e#11952#11953#0" expanded="true" />
+            <element signature="class#2728:3708" expanded="false" />
+            <element signature="e#12467#12468#0" expanded="true" />
+            <element signature="e#12504#12505#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -708,8 +713,9 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#11915#11916#0" expanded="true" />
-            <element signature="e#11952#11953#0" expanded="true" />
+            <element signature="class#2728:3708" expanded="false" />
+            <element signature="e#12467#12468#0" expanded="true" />
+            <element signature="e#12504#12505#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -732,8 +738,9 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#11915#11916#0" expanded="true" />
-            <element signature="e#11952#11953#0" expanded="true" />
+            <element signature="class#2728:3708" expanded="false" />
+            <element signature="e#12467#12468#0" expanded="true" />
+            <element signature="e#12504#12505#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -866,21 +873,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/BasicCOLA.java">
+    <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1134">
-          <caret line="87" column="17" lean-forward="true" selection-start-line="87" selection-start-column="17" selection-end-line="87" selection-end-column="17" />
+        <state relative-caret-position="196">
+          <caret line="53" column="24" lean-forward="true" selection-start-line="53" selection-start-column="24" selection-end-line="53" selection-end-column="24" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#11915#11916#0" expanded="true" />
-            <element signature="e#11952#11953#0" expanded="true" />
+            <element signature="class#563:975" expanded="false" />
+            <element signature="class#1026:1472" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/COLABlock.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
+        <state relative-caret-position="651">
           <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
           <folding>
             <element signature="e#403#404#0" expanded="true" />
@@ -890,14 +897,15 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/BasicCOLA.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="50" column="22" lean-forward="true" selection-start-line="50" selection-start-column="22" selection-end-line="50" selection-end-column="22" />
+        <state relative-caret-position="156">
+          <caret line="227" column="28" lean-forward="true" selection-start-line="227" selection-start-column="28" selection-end-line="227" selection-end-column="28" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="class#563:975" expanded="false" />
-            <element signature="class#1026:1472" expanded="false" />
+            <element signature="class#2728:3708" expanded="false" />
+            <element signature="e#12467#12468#0" expanded="true" />
+            <element signature="e#12504#12505#0" expanded="true" />
           </folding>
         </state>
       </provider>

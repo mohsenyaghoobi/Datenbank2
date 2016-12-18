@@ -59,15 +59,12 @@ public class Main {
             Log(d.toString() + " :: " + value);
             cola.insertElement(key, value);
             Log("--------------------------");
-            Log("Actual State:");
-            Log(cola.toString());
-            Log("--------------------------");
             counter++;
         }
 
-        Log("Seach "  + key  + " found: " + cola.searchElement(key));
-       //Log("Seach "  + 1231282800000L  + " found: " + cola.searchElement(1231282800000L));
-        Log("Seach "  + 1262905200000L  + " found: " + cola.searchElement(1262905200000L));
+        Log("Seach " + 1262041200000L + " found: " + cola.searchElement(1262041200000L));
+        Log("Seach " + 1259708400000L + " found: " + cola.searchElement(1259708400000L));
+        Log("Seach " + 1231196400000L + " found: " + cola.searchElement(1231196400000L));
         Log(cola.toString());
         Log("Number of elements: " + counter);
         cola.close();
