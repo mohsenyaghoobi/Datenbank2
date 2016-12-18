@@ -66,7 +66,7 @@ public class Main {
         }
 
         Log("Seach "  + key  + " found: " + cola.searchElement(key));
-        Log("Seach "  + 1231282800000L  + " found: " + cola.searchElement(1231282800000L));
+       //Log("Seach "  + 1231282800000L  + " found: " + cola.searchElement(1231282800000L));
         Log("Seach "  + 1262905200000L  + " found: " + cola.searchElement(1262905200000L));
         Log(cola.toString());
         Log("Number of elements: " + counter);
