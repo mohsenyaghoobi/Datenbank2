@@ -6,19 +6,19 @@ public class Main {
 		HashFunction<Integer> h = new HashFunction<Integer>() {
 			@Override
 			public int hash(Integer obj) {
-				return obj.intValue()*3+7;
+				return obj*3+7;
 			}
 		};
 		HashFunction<Integer> i = new HashFunction<Integer>() {
 			@Override
 			public int hash(Integer obj) {
-				return obj.intValue()*13+3;
+				return obj*13+3;
 			}
 		};
 		HashFunction<Integer> j = new HashFunction<Integer>() {
 			@Override
 			public int hash(Integer obj) {
-				return obj.intValue()*7+4;
+				return obj*7+4;
 			}
 		};
 		// 10, 5, 6, 8, 7, 1, 3, 5, 6, 4
