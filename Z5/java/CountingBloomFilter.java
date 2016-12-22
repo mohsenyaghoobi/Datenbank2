@@ -27,7 +27,7 @@ public class CountingBloomFilter<T> {
      */
     public void insert( T obj ) {
     	for(int i=0; i<hashes.length; i++)
-    		counts[hashes[i].hash(obj)%counts.length]++;
+    		counts[Math.abs(hashes[i].hash(obj)%counts.length)]++;
     }
     
     /**
@@ -38,7 +38,7 @@ public class CountingBloomFilter<T> {
     public void remove( T obj ) {
     	if(contains(obj)!= Result.FALSE)
         	for(int i=0; i<hashes.length; i++)
-        		counts[hashes[i].hash(obj)%counts.length]--;
+        		counts[Math.abs(hashes[i].hash(obj)%counts.length)]--;
     }
     
     
@@ -50,7 +50,7 @@ public class CountingBloomFilter<T> {
     public Result contains( T obj ) {
     	Result r = Result.FALSE;
     	for(int i=0; i<hashes.length; i++){
-    		int h = counts[hashes[i].hash(obj)%counts.length];
+    		int h = counts[Math.abs(hashes[i].hash(obj)%counts.length)];
     		if(h>0)
     			r = Result.MAYBE;
     		else if(h == 0)

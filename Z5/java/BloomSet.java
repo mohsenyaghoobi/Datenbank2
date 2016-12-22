@@ -27,8 +27,9 @@ public class BloomSet<T> extends HashSet<T>{
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean contains(Object o) {
-		//return super.contains(o);
-		return filter.contains((T) o)==CountingBloomFilter.Result.MAYBE;
+		if(filter.contains((T) o)==CountingBloomFilter.Result.MAYBE)
+			return super.contains(o);
+		return false;
 	}
 	@Override
 	public boolean remove(Object o) {
