@@ -1,4 +1,4 @@
-package aufgabe53;
+package aufgabe2;
 
 import java.util.HashSet;
 

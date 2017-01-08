@@ -1,7 +1,9 @@
-import bdtree.BDTreeComponent;
-import bdtree.KinderInfo;
-import bdtree.Leaf;
-import bdtree.Node;
+package aufgabe4;
+
+import aufgabe4.bdtree.BDTreeComponent;
+import aufgabe4.bdtree.KinderInfo;
+import aufgabe4.bdtree.Leaf;
+import aufgabe4.bdtree.Node;
 
 import java.awt.*;
 import java.util.ArrayList;

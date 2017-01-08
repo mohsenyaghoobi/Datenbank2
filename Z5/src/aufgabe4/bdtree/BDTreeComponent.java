@@ -1,4 +1,6 @@
-package bdtree;
+package aufgabe4.bdtree;
+
+
 
 /**
  * @class BDTreeComponent is a Node or a Leaf of BD Tree

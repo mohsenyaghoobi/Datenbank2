@@ -1,4 +1,4 @@
-package bdtree;
+package aufgabe4.bdtree;
 
 public class KinderInfo {
     public String name;

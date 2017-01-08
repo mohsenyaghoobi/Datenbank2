@@ -1,20 +1,20 @@
-package bdtree;
+package aufgabe4.bdtree;
 
 import java.awt.*;
 
 /**
  * @class Node is a node of BD Tree, it contains no information of any object
  */
-public class Node extends BDTreeComponent {
+public class Node extends aufgabe4.bdtree.BDTreeComponent {
     /**
      * left child if this node
      * */
-    public BDTreeComponent left;
+    public aufgabe4.bdtree.BDTreeComponent left;
 
     /**
      * right child of this node
      * */
-    public BDTreeComponent right;
+    public aufgabe4.bdtree.BDTreeComponent right;
 
     /**
      * position where this node will be split

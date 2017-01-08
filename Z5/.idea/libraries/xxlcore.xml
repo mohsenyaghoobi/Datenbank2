@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="xxlcore">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../xxl-master/classes/artifacts/xxlcore_jar/xxlcore.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
