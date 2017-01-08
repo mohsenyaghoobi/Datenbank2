@@ -1,8 +1,5 @@
-package treecomplements;
+package bdtree;
 
-/**
- * Created by qwert on 07/01/2017.
- */
 public class KinderInfo {
     public String name;
     public String geschenk;
@@ -15,6 +12,11 @@ public class KinderInfo {
         this.x = x;
         this.y = y;
     }
+    /**
+     * Check if this object should be on the left or right side of a node
+     * @param n node to compare with this object
+     * @return true if this object should be on the left side of a node, otherwise false
+     * **/
     public boolean isLeft(Node n) {
         return (n.splitX && this.x < n.splitPosition) || (!n.splitX && this.y < n.splitPosition);
     }
