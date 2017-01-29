@@ -27,6 +27,16 @@ public class Relation extends Entry implements Iterable<String>, Comparable<Rela
                 this.entries.add(entry);
             }
     }
+    public Relation(Object[] entries, Object[] second) {
+        this(new ArrayList());
+        for (Object o : entries)
+            this.entries.add(o.toString());
+
+        for (Object entry : second)
+            if (!this.entries.contains(entry)) {
+                this.entries.add(entry.toString());
+            }
+    }
 
     public int length() {
         return entries.size();
@@ -45,6 +55,11 @@ public class Relation extends Entry implements Iterable<String>, Comparable<Rela
             @Override
             public String next() {
                 return entries.get(index++);
+            }
+
+            @Override
+            public void remove() {
+
             }
 
             @Override
