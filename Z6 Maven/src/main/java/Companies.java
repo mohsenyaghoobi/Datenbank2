@@ -1,41 +1,38 @@
-import xxl.core.indexStructures.IndexedSet;
+import xxl.core.indexStructures.BPlusIndexedSet;
+import xxl.core.indexStructures.builder.BPlusTree.BPlusTreeBuilder;
 import xxl.core.indexStructures.builder.Builders;
-import xxl.core.indexStructures.builder.Builders.BPlusCreatorFacade;
+import xxl.core.relational.schema.Schema;
 import xxl.core.relational.schema.Schemas;
-import xxl.core.util.FileUtils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Companies{
-	IndexedSet set;
-	
-	public Companies() throws SQLException {
-		set = BPlusCreatorFacade.Tuples(Schemas.createSchema("Relation").addNChar("entry", 20)).getBuilder().create();
-		RelationCursor R = new RelationCursor("company_country.tsv");
-		List<Relation> relations = new ArrayList<Relation>();
-		while(R.hasNextObject())
-			relations.add(R.nextObject());
-		
-	    set.addAll(relations);
-	    System.out.println(set); // [0, 1, 2, 3, ..., 99998, 99999]
+public class Companies {
+    public BPlusIndexedSet<Relation> bplusindexedSet;
 
-	    try {
-	      final String tempPath = FileUtils.mkTempDir();
+    public Companies() throws SQLException {
+        Schema schemas = Schemas.createSchema("Relation");
+        schemas.addNChar("company", 20);
+        schemas.addNChar("country", 20);
+        BPlusTreeBuilder builder = new BPlusTreeBuilder(Builders.createBPlusTree.Tuples(schemas));
+        bplusindexedSet = builder.create();
 
-	      IndexedSet diskSet =
-	          Builders.createBPlusTree.Integer("Table").storeAt(tempPath)
-	              .getBuilder().create();
+        RelationCursor R = new RelationCursor("company_country.tsv");
+        List<Relation> relations = new ArrayList<Relation>();
+        while (R.hasNextObject()) {
+            Relation r = R.nextObject();
+            relations.add(r);
+            if (bplusindexedSet.add(r)) {
+                log("new entry is added to tree");
+            } else {
+                log("error by adding new entry");
+            }
+        }
+        log(bplusindexedSet);
+    }
 
-	      diskSet.addAll(relations);
-	      System.out.println(diskSet); // [0, 1, 2, 3, ..., 99998, 99999]
-
-	      diskSet.save();
-	    }
-	    catch(Exception e){
-	    	
-	    }
-	}
-
+    private void log(Object o) {
+        System.out.println(o);
+    }
 }
