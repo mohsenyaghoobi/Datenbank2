@@ -1,12 +1,10 @@
-import java.awt.List;
+import xxl.core.cursors.AbstractCursor;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.ClosedWatchServiceException;
 import java.util.ArrayList;
-
-import xxl.core.cursors.AbstractCursor;
 
 public class RelationCursor extends AbstractCursor<Relation> {
 
